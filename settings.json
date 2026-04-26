@@ -1,0 +1,20 @@
+{
+    "firstBeat": {
+        "type": "triangle",
+        "frequency": 1000,
+        "volume": 1,
+        "percussiveDrop": true
+    },
+    "mainBeat": {
+        "type": "sine",
+        "frequency": 1000,
+        "volume": 1,
+        "percussiveDrop": true
+    },
+    "subBeat": {
+        "type": "sine",
+        "frequency": 1000,
+        "volume": 0.8,
+        "percussiveDrop": false
+    }
+}

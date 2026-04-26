@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A premium, precise, fast and interactive web metronome powered by FastAPI and Web Audio API.">
+    <title>Premium Web Metronome</title>
+    <link rel="stylesheet" href="style.css?v=2">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="glass-panel" style="position: relative;">
+        <button id="settingsBtn" class="icon-btn settings-btn" aria-label="Settings">⚙️</button>
+        <h1>Metronome</h1>
+        
+        <div class="bpm-display">
+            <span id="bpmText" class="bpm-text">80</span> <span class="bpm-label">BPM</span>
+        </div>
+        
+        <div class="slider-container">
+            <button class="control-btn" id="downBpmBtn" aria-label="Decrease BPM" style="width: 36px; height: 36px; font-size: 1rem;">▼</button>
+            <input type="range" id="bpmSlider" min="30" max="300" value="80" class="slider" aria-label="BPM slider">
+            <button class="control-btn" id="upBpmBtn" aria-label="Increase BPM" style="width: 36px; height: 36px; font-size: 1rem;">▲</button>
+        </div>
+        
+        <div class="controls-row">
+            <button class="control-btn" id="minusBeatsBtn" aria-label="Decrease Beats">-</button>
+            <div class="time-signature">
+                <span id="beatsText">4/4</span>
+            </div>
+            <button class="control-btn" id="plusBeatsBtn" aria-label="Increase Beats">+</button>
+        </div>
+        
+        <div class="settings-row">
+            <div class="setting-group">
+                <label for="subdivisionSelect">Subdivision</label>
+                <select id="subdivisionSelect" class="styled-select">
+                    <option value="1">Quarter Notes</option>
+                    <option value="2">8th Notes</option>
+                    <option value="4" selected>16th Notes</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="speed-trainer-panel">
+            <div class="trainer-header">
+                <span>Speed Trainer</span>
+                <label class="switch">
+                    <input type="checkbox" id="trainerToggle">
+                    <span class="slider-toggle round"></span>
+                </label>
+            </div>
+            <div class="trainer-settings" id="trainerSettings" style="display: none;">
+                <div class="trainer-input-row">
+                    <div class="trainer-input">
+                        <label>+BPM</label>
+                        <input type="number" id="trainerIncrement" value="2" min="1" max="20" class="styled-input">
+                    </div>
+                    <div class="trainer-input">
+                        <label>Bars</label>
+                        <input type="number" id="trainerBars" value="4" min="1" max="32" class="styled-input">
+                    </div>
+                    <div class="trainer-input">
+                        <label>Target</label>
+                        <input type="number" id="trainerTarget" value="160" min="30" max="300" class="styled-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="indicators" id="indicators">
+            <!-- Beat indicators dynamically added here -->
+        </div>
+
+        <div class="strum-panel">
+            <div class="trainer-header">
+                <span>Strum Guide</span>
+                <label class="switch">
+                    <input type="checkbox" id="strumToggle" checked>
+                    <span class="slider-toggle round"></span>
+                </label>
+            </div>
+            <div class="strum-indicator" id="strumIndicator">
+                <span id="strumText">-</span>
+            </div>
+        </div>
+
+        <button id="playBtn" class="play-btn">PLAY</button>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content glass-panel">
+            <div class="modal-header">
+                <h2>Sound Settings</h2>
+                <button id="closeSettingsBtn" class="icon-btn close-btn">✖</button>
+            </div>
+            
+            <div class="settings-scroll">
+                <!-- First Beat -->
+                <div class="settings-section">
+                    <h3>First Beat</h3>
+                    <div class="form-row">
+                        <label>Wave Type</label>
+                        <select id="fbType" class="styled-select">
+                            <option value="sine">Sine</option>
+                            <option value="square">Square</option>
+                            <option value="triangle">Triangle</option>
+                            <option value="sawtooth">Sawtooth</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label>Pitch (Hz)</label>
+                        <input type="number" id="fbFreq" class="styled-input" min="50" max="4000">
+                    </div>
+                    <div class="form-row">
+                        <label>Volume</label>
+                        <input type="range" id="fbVol" class="slider" min="0" max="2" step="0.1">
+                    </div>
+                    <div class="form-row">
+                        <label>Percussive Drop</label>
+                        <label class="switch">
+                            <input type="checkbox" id="fbDrop">
+                            <span class="slider-toggle round"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Main Beats -->
+                <div class="settings-section">
+                    <h3>Main Beats</h3>
+                    <div class="form-row">
+                        <label>Wave Type</label>
+                        <select id="mbType" class="styled-select">
+                            <option value="sine">Sine</option>
+                            <option value="square">Square</option>
+                            <option value="triangle">Triangle</option>
+                            <option value="sawtooth">Sawtooth</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label>Pitch (Hz)</label>
+                        <input type="number" id="mbFreq" class="styled-input" min="50" max="4000">
+                    </div>
+                    <div class="form-row">
+                        <label>Volume</label>
+                        <input type="range" id="mbVol" class="slider" min="0" max="2" step="0.1">
+                    </div>
+                    <div class="form-row">
+                        <label>Percussive Drop</label>
+                        <label class="switch">
+                            <input type="checkbox" id="mbDrop">
+                            <span class="slider-toggle round"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Subdivisions -->
+                <div class="settings-section">
+                    <h3>Subdivisions</h3>
+                    <div class="form-row">
+                        <label>Wave Type</label>
+                        <select id="sbType" class="styled-select">
+                            <option value="sine">Sine</option>
+                            <option value="square">Square</option>
+                            <option value="triangle">Triangle</option>
+                            <option value="sawtooth">Sawtooth</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label>Pitch (Hz)</label>
+                        <input type="number" id="sbFreq" class="styled-input" min="50" max="4000">
+                    </div>
+                    <div class="form-row">
+                        <label>Volume</label>
+                        <input type="range" id="sbVol" class="slider" min="0" max="2" step="0.1">
+                    </div>
+                    <div class="form-row">
+                        <label>Percussive Drop</label>
+                        <label class="switch">
+                            <input type="checkbox" id="sbDrop">
+                            <span class="slider-toggle round"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button id="resetSettingsBtn" class="control-btn" style="flex: 1; margin-right: 10px; font-size: 1rem; padding: 15px;">RESET DEFAULTS</button>
+                <button id="saveSettingsBtn" class="play-btn save-btn" style="flex: 2; margin-top: 0;">SAVE SETTINGS</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="app.js?v=2"></script>
+</body>
+</html>
