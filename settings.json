@@ -1,7 +1,7 @@
 {
     "firstBeat": {
         "type": "triangle",
-        "frequency": 1000,
+        "frequency": 1001,
         "volume": 1,
         "percussiveDrop": true
     },

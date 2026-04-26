@@ -445,10 +445,11 @@ input:checked + .slider-toggle:before {
 
 .modal-content {
     width: 90%;
-    max-width: 450px;
+    max-width: 550px;
     max-height: 90vh;
     display: flex;
     flex-direction: column;
+    align-items: stretch;
     padding: 25px;
 }
 
@@ -465,6 +466,7 @@ input:checked + .slider-toggle:before {
 }
 
 .settings-scroll {
+    width: 100%;
     overflow-y: auto;
     padding-right: 10px;
     margin-bottom: 20px;
